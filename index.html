@@ -2,115 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Monthsary with You 💖</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monthsary Tulip Bouquet</title>
   <style>
-    * {
+    /* ===== ULTRA MODERN RESET + BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #0a192f, #000000);
-      color: #f5f5f5;
-      min-height: 100vh;
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #020408;
+      --accent-pink: #ff4d6d;
+      --accent-green: #4ca56c;
+      --accent-purple: #a855f7;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --glass-bg: rgba(18, 28, 48, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glow-pink: rgba(255, 77, 109, 0.4);
+      --glow-green: rgba(76, 165, 108, 0.4);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #e2e8f0;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(0, 0, 0, 0.05);
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      position: relative;
-      transition: background 1.5s ease-in-out;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* subtle glow background */
-    body::before {
-      content: "";
+    /* Advanced particle background */
+    #particles {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: radial-gradient(circle at center, rgba(255, 77, 109, 0.15), transparent 80%);
-      opacity: 0.6;
       pointer-events: none;
-      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
     }
 
-    .wrapper {
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple));
+      opacity: 0.6;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Main container */
+    .container {
       position: relative;
+      max-width: 100vw;
+      max-height: 100vh;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
-      max-width: 90vw;
-      padding: 2rem;
+      justify-content: center;
+      gap: 2.5rem;
+      z-index: 10;
     }
 
-    h1 {
-      font-size: 1.8rem;
+    /* Hero title with advanced animations */
+    .hero-title {
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-align: center;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      letter-spacing: -0.02em;
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(30px) scale(0.95);
+      transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 0 30px var(--glow-pink));
     }
 
-    .subtitle {
-      font-size: 1rem;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+    .hero-title.animate {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
-    /* button */
-    .tap-button {
-      appearance: none;
-      border: none;
-      background: rgba(255, 77, 109, 0.3);
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 1rem 2rem;
-      border-radius: 60px;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(255, 77, 109, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 77, 109, 0.4);
-      transition: all 0.3s ease-in-out;
-      opacity: 0;
-      transform: translateY(20px);
-      transition-delay: 0.2s;
-    }
-
-    .tap-button:hover {
-      background: rgba(255, 77, 109, 0.4);
-      box-shadow: 0 6px 25px rgba(255, 77, 109, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .tap-button:active {
-      transform: translateY(0);
-    }
-
-    /* bouquet wrapper */
-    .bouquet {
+    /* Tulips container - ultra enhanced */
+    .tulips-container {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 1.5rem;
-      height: 180px;
-      max-width: 90vw;
-      margin-top: 1rem;
-      position: relative;
-      overflow: visible;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: clamp(20px, 5vw, 50px);
+      min-height: 300px;
+      width: 100%;
+      perspective: 1000px;
     }
 
     .tulip {
@@ -118,387 +129,459 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      --petal-color: var(--accent-pink);
+      --stem-color: var(--accent-green);
+      --leaf-color: #3a8c5c;
+      opacity: 0;
+      transform: translateY(50px) rotateY(10deg);
+      transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .tulip.blooming {
+      opacity: 1;
+      transform: translateY(0) rotateY(0deg) scale(1.05);
     }
 
     .stem {
-      width: 6px;
-      height: 140px;
-      background: #88cc88;
-      border-radius: 3px;
-      transform-origin: top;
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      height: 220px;
+      width: 10px;
+      background: linear-gradient(to top, var(--stem-color), #2d7a4f);
+      border-radius: 6px 6px 20px 20px;
+      box-shadow: 
+        0 0 30px var(--glow-green),
+        inset 0 0 10px rgba(255,255,255,0.1);
+      transform-origin: bottom;
+      transition: all 1s ease-in-out;
+    }
+
+    .tulip.blooming .stem {
+      transform: rotateZ(2deg) scaleY(1.02);
+      filter: brightness(1.1);
     }
 
     .leaf {
-      width: 20px;
-      height: 10px;
-      background: #a8cc98;
-      border-radius: 10px 10px 0 10px;
       position: absolute;
-      transform-origin: left;
-      opacity: 0.9;
-      left: -8px;
+      width: 35px;
+      height: 15px;
+      background: linear-gradient(to right, var(--leaf-color), #4ca56c);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      transform-origin: bottom center;
+      box-shadow: 0 0 15px rgba(76, 165, 108, 0.6);
+      opacity: 0.7;
+      transition: all 0.8s ease;
     }
 
-    .leaf:nth-of-type(1) {
-      top: 40px;
-      transform: rotate(-30deg);
+    .tulip.blooming .leaf {
+      opacity: 1;
+      transform: scale(1.1);
     }
 
-    .leaf:nth-of-type(2) {
-      top: 70px;
-      transform: rotate(25deg);
-    }
-
+    /* Petals with advanced bloom physics */
     .petals {
       position: absolute;
-      top: -34px;
+      top: 45px;
       left: 50%;
       transform: translateX(-50%);
-      width: 40px;
-      height: 34px;
-      display: flex;
-      overflow: hidden;
-      transform-origin: bottom center;
+      z-index: 4;
     }
 
     .petal {
-      width: 16px;
-      height: 34px;
-      background: #ff6f8c;
+      position: absolute;
+      width: 20px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--petal-color), #ff6b82);
       border-radius: 50% 50% 0 0;
-      margin: 0 2px;
-      position: relative;
       transform-origin: bottom center;
-    }
-
-    .petal:nth-of-type(1) {
-      transform: rotate(-60deg) scale(0.88);
-    }
-
-    .petal:nth-of-type(2) {
-      transform: rotate(-10deg);
-    }
-
-    .petal:nth-of-type(3) {
-      transform: rotate(40deg) scale(0.88);
-    }
-
-    /* closed bud state */
-    .tulip:not(.bloomed) .petals {
-      transform: translateX(-50%) scale(0.65);
-      transform-origin: bottom center;
-    }
-
-    .tulip:not(.bloomed) .petal {
-      transform: rotate(-10deg);
-    }
-
-    /* glow around tulips when blooming */
-    .tulip::after {
-      content: "";
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 60px;
-      background: radial-gradient(circle, rgba(255, 77, 109, 0.3), transparent);
-      border-radius: 50%;
+      box-shadow: 
+        0 0 20px var(--glow-pink),
+        inset 0 2px 4px rgba(255,255,255,0.3);
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      transform: scale(0) rotate(0deg);
+      transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    .tulip.bloomed::after {
-      opacity: 0.8;
+    .tulip.blooming .petal {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
     }
 
-    /* organic sway */
-    .tulip.bloomed .stem {
-      animation: sway 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes sway {
-      0% {
-        transform: rotate(0);
-      }
-      100% {
-        transform: rotate(2deg);
-      }
-    }
-
-    /* typing effect */
-    .message {
-      max-width: 80vw;
+    /* Message card - glassmorphism perfection */
+    .message-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px) saturate(180%);
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 
+        0 25px 50px rgba(0,0,0,0.25),
+        0 0 50px var(--glow-pink);
+      padding: 2.5rem;
+      max-width: 450px;
+      width: 90%;
       text-align: center;
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .message-card.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .message-text {
       font-size: 1.1rem;
-      opacity: 0;
-      transform: translateY(25px);
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: pre-line;
+      line-height: 1.8;
+      letter-spacing: 0.3px;
+      color: var(--text-primary);
+    }
+
+    /* Ultra-modern button */
+    .bloom-btn {
       position: relative;
-      z-index: 2;
+      background: linear-gradient(135deg, rgba(255,77,109,0.2), rgba(168,85,247,0.2));
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      color: var(--accent-pink);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1.2rem 2.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 
+        0 10px 30px rgba(255,77,109,0.3),
+        0 0 40px rgba(255,77,109,0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 1px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
 
-    /* floating hearts */
-    .heart {
-      position: absolute;
-      font-size: 1.2rem;
-      color: rgba(255, 77, 109, 0.8);
-      opacity: 0;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* particles in background */
-    .particle {
+    .bloom-btn::before {
+      content: '';
       position: absolute;
       top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .bloom-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 
+        0 20px 40px rgba(255,77,109,0.4),
+        0 0 60px rgba(255,77,109,0.3);
+      background: linear-gradient(135deg, rgba(255,77,109,0.3), rgba(168,85,247,0.3));
+    }
+
+    .bloom-btn:hover::before {
+      left: 100%;
+    }
+
+    /* Floating hearts v2 */
+    .hearts {
+      position: fixed;
+      top: 0;
       left: 0;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: rgba(255, 77, 109, 0.3);
-      opacity: 0;
-      transform: translateY(100vh);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
     }
 
-    /* hidden audio iframe (no visible player) */
-    iframe {
+    .heart {
       position: absolute;
-      top: -9999px;
-      left: -9999px;
+      width: 20px;
+      height: 18px;
+      opacity: 0;
+      animation: floatHeart 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px var(--accent-pink));
     }
 
-    /* mobile touch friendliness */
-    @media (max-width: 500px) {
-      .tap-button {
-        font-size: 1rem;
-        padding: 0.9rem 1.6rem;
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      background: var(--accent-pink);
+      border-radius: 50% 50% 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .heart::after {
+      transform: rotate(45deg);
+      top: -11px;
+      left: 0;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        opacity: 0;
+        transform: translateY(100vh) scale(0) rotate(0deg);
       }
-      .bouquet {
-        gap: 1rem;
+      10% {
+        opacity: 1;
+        transform: translateY(90vh) scale(1) rotate(180deg);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(-20vh) scale(1.2) rotate(360deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-50vh) scale(0.5) rotate(720deg);
+      }
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    /* Confetti container */
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-pink);
+      opacity: 0;
+      animation: confetti-fall 3s ease-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        transform: translateY(-100vh) rotateZ(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotateZ(720deg);
+      }
+    }
+
+    /* Responsive perfection */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+        gap: 2rem;
+      }
+      
+      .tulips-container {
+        gap: 15px;
+        min-height: 250px;
+      }
+      
+      .stem {
+        height: 160px;
+      }
+      
+      .message-card {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .tulips-container {
+        min-height: 220px;
+      }
+      
+      .stem {
         height: 140px;
       }
-      .stem {
-        height: 110px;
-      }
-      .petals {
-        width: 32px;
-        height: 28px;
-      }
-      .petal {
-        width: 14px;
-        height: 28px;
-      }
+    }
+
+    /* Typing animation */
+    .typing {
+      border-right: 3px solid var(--accent-pink);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3s steps(40) forwards, blink 0.75s infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 50% { border-color: transparent; }
+      51%, 100% { border-color: var(--accent-pink); }
     }
   </style>
 </head>
 <body>
-  <div id="audioContainer"></div>
-
-  <div class="wrapper">
-    <h1 id="greeting">Happy Monthsary, babe</h1>
-    <p class="subtitle" id="subtitle">Tap the button to make our tulips bloom 💖</p>
-
-    <button class="tap-button" id="tapButton">Tap mo 'to 💖</button>
-
-    <div class="bouquet" id="bouquet">
-      <!-- tulips will be generated by JS -->
-    </div>
-
-    <div class="message" id="message"></div>
+  <!-- YouTube Player (Hidden) -->
+  <div id="yt-container" style="position: absolute; top: -1000px;">
+    <iframe
+      id="yt-player"
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/8Q-C6-A-FAY?start=12&enablejsapi=1&playsinline=1"
+      title="Our Song"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
   </div>
 
-  <script>
-    // DOM elements
-    const tapButton = document.getElementById("tapButton");
-    const bouquet = document.getElementById("bouquet");
-    const greeting = document.getElementById("greeting");
-    const subtitle = document.getElementById("subtitle");
-    const messageEl = document.getElementById("message");
-    const audioContainer = document.getElementById("audioContainer");
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">🌙</button>
 
-    // generate 6 tulips
-    const tulipCount = 6;
+  <!-- Particles -->
+  <canvas id="particles"></canvas>
 
-    function createTulip(index) {
-      const tulip = document.createElement("div");
-      tulip.className = "tulip";
-      tulip.style.setProperty("--delay", `${index * 0.2}s`);
+    <button class="button" id="bloomBtn">Click here!</button>
+   <div class="message" id="message">
+        <h1>Happy Monthsary, Love! 🌷</h1>
+        <p>Thank you for making every day special. Just like these tulips blooming, our love keeps growing stronger each day. You're my favorite person, my everything. I love you so much! 💕</p>
+    </div>
 
-      const stem = document.createElement("div");
-      stem.className = "stem";
+    <div id="youtube-player"></div>
 
-      const leaf1 = document.createElement("div");
-      leaf1.className = "leaf";
-      const leaf2 = document.createElement("div");
-      leaf2.className = "leaf";
-
-      const petals = document.createElement("div");
-      petals.className = "petals";
-
-      for (let i = 0; i < 3; i++) {
-        const petal = document.createElement("div");
-        petal.className = "petal";
-        petals.appendChild(petal);
-      }
-
-      tulip.appendChild(stem);
-      stem.appendChild(leaf1);
-      stem.appendChild(leaf2);
-      tulip.appendChild(petals);
-
-      return tulip;
-    }
-
-    for (let i = 0; i < tulipCount; i++) {
-      bouquet.appendChild(createTulip(i));
-    }
-
-    const tulips = document.querySelectorAll(".tulip");
-
-    // typing effect for message
-    function typeMessage(text, el, delay = 40) {
-      el.innerHTML = "";
-      let i = 0;
-      const type = setInterval(() => {
-        if (i < text.length) {
-          el.textContent += text[i];
-          i++;
-          el.scrollTop = 1000; // auto scroll
-        } else {
-          clearInterval(type);
+    <script>
+        // YouTube API setup for audio only [web:1][page:1]
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: '__8HhslsBEk',  // Ebeb by Flow G [web:1]
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'fs': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
         }
-      }, delay);
-    }
 
-    // insert YouTube audio (Ebeb – Flow G, chorus only)
-    function injectAudio() {
-      const iframe = document.createElement("iframe");
-      iframe.src =
-        "https://www.youtube.com/embed/oAqqQqQdrEc?autoplay=1&start=60&end=120&controls=0&showinfo=0&rel=0";
-      iframe.width = "1";
-      iframe.height = "1";
-      iframe.style.position = "absolute";
-      iframe.style.top = "-9999px";
-      iframe.style.left = "-9999px";
-      iframe.allow = "autoplay; encrypted-media";
-      audioContainer.appendChild(iframe);
-    }
+        function onPlayerReady(event) {
+            // Player ready, don't autoplay
+        }
 
-    // entry animation on load
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        greeting.style.opacity = "1";
-        greeting.style.transform = "translateY(0)";
-      }, 300);
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-      setTimeout(() => {
-        subtitle.style.opacity = "1";
-        subtitle.style.transform = "translateY(0)";
-      }, 600);
+        // Bloom interaction
+        const btn = document.getElementById('bloomBtn');
+        const bouquet = document.getElementById('bouquet');
+        const body = document.body;
+        const message = document.getElementById('message');
+        const heartsContainer = document.getElementById('hearts');
+        let bloomed = false;
 
-      setTimeout(() => {
-        bouquet.style.opacity = "1";
-        bouquet.style.transform = "translateY(0)";
-      }, 900);
+        btn.addEventListener('click', () => {
+            if (bloomed) return;
+            bloomed = true;
 
-      setTimeout(() => {
-        toggleTapButton(true);
-      }, 1200);
-    });
+            // Bloom tulips staggered
+            const tulips = document.querySelectorAll('.tulip');
+            tulips.forEach((tulip, index) => {
+                setTimeout(() => {
+                    tulip.classList.add('bloom');
+                }, index * 200);
+            });
 
-    function toggleTapButton(visible) {
-      tapButton.style.opacity = visible ? "1" : "0";
-      tapButton.style.transform = visible ? "translateY(0)" : "translateY(20px)";
-    }
+            // Brighten background
+            body.classList.add('bloomed');
 
-    // bloom tulips sequentially
-    function bloomTulips() {
-      tapButton.disabled = true;
-      document.body.style.background =
-        "linear-gradient(135deg, #0a193f, #0a0a0a)";
+            // Show message
+            setTimeout(() => {
+                body.classList.add('bloomed');
+                message.classList.add('bloomed');
+                typeWriter(message);
+            }, 1500);
 
-      document.body.style.opacity = "0.8";
-      setTimeout(() => {
-        document.body.style.opacity = "1";
-      }, 300);
+            // Start music after interaction [web:2][page:1]
+            if (player && player.playVideo) {
+                player.playVideo();
+            }
 
-      tulips.forEach((tulip, index) => {
-        setTimeout(() => {
-          tulip.classList.add("bloomed");
-          createFloatingHeart(tulip);
-        }, 300 + index * 250);
-      });
+            // Floating hearts
+            createHearts();
+        });
 
-      // after bloom, show message with typing
-      setTimeout(() => {
-        const loveMessage =
-          "THANK YOU FOR EVERYTHING MY LOVE 💖\n" +
-          "Happy monthsary, babe — I'm so proud of how we've grown together.\n" +
-          "Every fight, every laugh, every late night chat has made us stronger.\n" +
-          "I know I'm still not perfect, but I choose you more and more every day.\n" +
-          "Just like these tulips blooming slowly and beautifully, I'm falling deeper in love with you.\n" +
-          "I love you so much, and I can't wait for all our future months together.";
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '💖';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 0.5 + 's';
+                    heartsContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
 
-        messageEl.style.opacity = "1";
-        messageEl.style.transform = "translateY(0)";
-        typeMessage(loveMessage, messageEl, 30);
-      }, 2000 + tulipCount * 250);
-    }
+        function typeWriter(element) {
+            const text = element.textContent;
+            element.textContent = '';
+            element.classList.add('typing');
+            let i = 0;
+            const timer = setInterval(() => {
+                element.textContent += text.charAt(i);
+                i++;
+                if (i > text.length) {
+                    clearInterval(timer);
+                    element.classList.remove('typing');
+                }
+            }, 80);
+        }
 
-    // floating hearts
-    function createFloatingHeart(tulip) {
-      const rect = tulip.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = window.innerHeight - rect.bottom;
-
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "💗";
-      heart.style.left = `${x}px`;
-      heart.style.top = `${y}px`;
-
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.style.opacity = "1";
-        heart.style.transform = `translate(${(Math.random() - 0.5) * 100}px, -100px) scale(1.2)`;
-        heart.style.transition = "all 2.5s ease-out";
-      }, 10);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 2500);
-    }
-
-    // particles in background
-    function createParticles() {
-      const count = 20;
-      for (let i = 0; i < count; i++) {
-        const p = document.createElement("div");
-        p.className = "particle";
-        p.style.left = `${Math.random() * 100}%`;
-        p.style.animationDelay = `${Math.random() * 2}s`;
-        p.style.animationDuration = `${3 + Math.random() * 2}s`;
-        document.body.appendChild(p);
-
-        // animate particle
-        setTimeout(() => {
-          p.style.opacity = "0.3";
-          p.style.transform = `translate(0, -${Math.random() * 200}px)`;
-        }, 200);
-      }
-    }
-
-    createParticles();
-
-    // interaction on button click
-    tapButton.addEventListener("click", () => {
-      bloomTulips();
-      injectAudio();
-    });
-  </script>
+        // Entrance animation
+        window.addEventListener('load', () => {
+            bouquet.style.opacity = '0';
+            bouquet.style.transform = 'scale(0.8) translateY(20px)';
+            bouquet.style.transition = 'all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            setTimeout(() => {
+                bouquet.style.opacity = '1';
+                bouquet.style.transform = 'scale(1) translateY(0)';
+            }, 200);
+        });
+    </script>
 </body>
 </html>
